@@ -10,9 +10,6 @@ public class Camera : MonoBehaviour
     public float sensitivity; // kamera hassaslik ayari
     public Transform body; //player body
 
-    private float rotationX = 0.0f; 
-    private float rotationY = 0.0f;
-
 
     void Start()
     {

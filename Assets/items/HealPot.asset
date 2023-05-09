@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52a92614fa0ed564aa74c9b8980525bd, type: 3}
   m_Name: HealPot
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 496880100539587320, guid: 1052449f7f4db5e4eb1a6d460d391f76, type: 3}
   type: 1
   description: 
   restoreHealthValue: 20
