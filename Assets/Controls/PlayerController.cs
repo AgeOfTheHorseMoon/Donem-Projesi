@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody rb;
 
+    public InventoryObject inventory;
+
 
     private void Start()
     {
@@ -37,8 +39,8 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    //private void Update()
-    //{
+    private void Update()
+    {
     //    #region hareket
     //    //float horizontal = Input.GetAxis("Horizontal");
     //    //float vertical = Input.GetAxis("Vertical");
@@ -83,27 +85,27 @@ public class PlayerController : MonoBehaviour
     //    }
     //    #endregion
 
-    //    #region envanter
-    //    if (Input.GetKeyDown(KeyCode.Tab))
-    //    {
-    //        Inventory.enabled = !Inventory.enabled;
+            #region envanter
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                Inventory.enabled = !Inventory.enabled;
 
-    //        if (!inventoryopen)
-    //        {
-    //            Cursor.lockState = CursorLockMode.None;
-    //            Cursor.visible = true;
-    //            inventoryopen = true;
-    //            mainCamera.GetComponent<Camera>().enabled = false;
-    //        }
-    //        else
-    //        {
-    //            Cursor.lockState = CursorLockMode.Locked;
-    //            Cursor.visible = false;
-    //            inventoryopen = false;
-    //            mainCamera.GetComponent<Camera>().enabled = true;
-    //        }
-    //    }
-    //    #endregion
+                if (!inventoryopen)
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                    inventoryopen = true;
+                    mainCamera.GetComponent<Camera>().enabled = false;
+                }
+                else
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+                    inventoryopen = false;
+                    mainCamera.GetComponent<Camera>().enabled = true;
+                }
+            }
+            #endregion
 
     //    #region itemE
  
@@ -116,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
     //    #endregion
 
-    //}
+    }
 
     private void FixedUpdate()
     {
@@ -132,35 +134,51 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    public List<GameObject> colliderList = new List<GameObject>();
-    public void OnTriggerEnter(Collider collider)
+    public void OnTriggerEnter(Collider other)
     {
-        if (!colliderList.Contains(collider.gameObject))
+        
+        var item = other.GetComponent<Item>();
+        if (item)
         {
-            colliderList.Add(collider.gameObject);
-            Debug.Log("Added " + gameObject.name);
-            Debug.Log("GameObjects in list: " + colliderList.Count);
+            inventory.AddItem(item.item, 1);
+            Destroy(other.gameObject);
         }
     }
 
-    public void OnTriggerExit(Collider collider)
+    private void OnApplicationQuit()
     {
-        if (colliderList.Contains(collider.gameObject))
-        {
-            colliderList.Remove(collider.gameObject);
-            Debug.Log("Removed " + gameObject.name);
-            Debug.Log("GameObjects in list: " + colliderList.Count);
-        }
+        inventory.Container.Clear();
     }
 
-    List<item> items = new List<item>();
-    public List<item> GetGameObjects()
-    {
-        for (int i = 0;i< colliderList.Count; i++)
-        {
-            items[i]= colliderList[i].GetComponent<item>();
-        }
-        return items;
-    }
+    //public List<GameObject> colliderList = new List<GameObject>();
+    //public void OnTriggerEnter(Collider collider)
+    //{
+    //    if (!colliderList.Contains(collider.gameObject))
+    //    {
+    //        colliderList.Add(collider.gameObject);
+    //        Debug.Log("Added " + gameObject.name);
+    //        Debug.Log("GameObjects in list: " + colliderList.Count);
+    //    }
+    //}
+
+    //public void OnTriggerExit(Collider collider)
+    //{
+    //    if (colliderList.Contains(collider.gameObject))
+    //    {
+    //        colliderList.Remove(collider.gameObject);
+    //        Debug.Log("Removed " + gameObject.name);
+    //        Debug.Log("GameObjects in list: " + colliderList.Count);
+    //    }
+    //}
+
+    //List<item> items = new List<item>();
+    //public List<item> GetGameObjects()
+    //{
+    //    for (int i = 0;i< colliderList.Count; i++)
+    //    {
+    //        items[i]= colliderList[i].GetComponent<item>();
+    //    }
+    //    return items;
+    //}
 
 }
