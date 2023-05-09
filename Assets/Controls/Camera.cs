@@ -5,15 +5,9 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
-    
-    [Range(5, 500)]
-    public float sensitivity; // kamera hassaslik ayari
-    public Transform body; //player body
-
-    private float rotationX = 0.0f; 
-    private float rotationY = 0.0f;
-
-
+    [SerializeField, Range(1f, 20f)] float mouseSensitivity = 1f;
+    [SerializeField] Transform playerBody;
+    float xRotation;
     void Start()
     {
         // fare imlecini kapatmak icin
@@ -23,15 +17,10 @@ public class Camera : MonoBehaviour
 
     void Update()
     {
-        Vector2 inputs = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        Vector3 rotation = new Vector3(inputs.x, inputs.y, 0f) * sensitivity * Time.deltaTime;
-        rotation.y = Mathf.Clamp(rotation.y, -80f, 90f);
-        RotateCamera(this.transform , rotation);
-    }
+        Vector2 cameraInputs = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * mouseSensitivity;
+        xRotation = Mathf.Clamp(-cameraInputs.y, -90f, 90f);
 
-    void RotateCamera(Transform camera, Vector3 rotation) 
-    { 
-        camera.localRotation = Quaternion.Euler(rotation.y, rotation.x, 0f);
-        body.localRotation *= Quaternion.Euler(0f, rotation.x, 0f);
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        playerBody.Rotate(Vector3.up * cameraInputs.x);
     }
 }

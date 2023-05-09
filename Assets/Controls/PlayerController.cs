@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
-
+[
+    RequireComponent(typeof(Rigidbody)),
+    RequireComponent(typeof(CapsuleCollider))
+]
 public class PlayerController : MonoBehaviour
 {
-    CharacterController controller;
-    Vector3 velocity;
-    bool isGrounded;
-    private bool isSprinting = false;
+    //CharacterController controller;
+    //Vector3 velocity;
+    //bool isGrounded;
+    //private bool isSprinting = false;
 
     public Transform ground;
     public float distance = 0.3f;
@@ -24,7 +26,6 @@ public class PlayerController : MonoBehaviour
     public Canvas Inventory;
     private bool inventoryopen;
 
-    BoxCollider itemColl;
     public Camera mainCamera;
 
     private Rigidbody rb;
@@ -34,109 +35,68 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        controller = GetComponent<CharacterController>();
+        //controller = GetComponent<CharacterController>();
         Inventory.GetComponent<Canvas>().enabled = false;
         rb = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
-    //    #region hareket
-    //    //float horizontal = Input.GetAxis("Horizontal");
-    //    //float vertical = Input.GetAxis("Vertical");
+        #region Movement Relative to Camera in World Space, Run-Walk, Jump
 
-    //    //Vector3 move = transform.right * horizontal + transform.forward * vertical;
-    //    //if (isSprinting)
-    //    //{
-    //    //    controller.Move(move * runSpeed * Time.deltaTime);
-    //    //}
-    //    //else
-    //    //{
-    //    //    controller.Move(move * speed * Time.deltaTime);
-    //    //}
-       
-    //    #endregion
+        // Get Inputs
+        Vector2 playerInputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-    //    #region ziplama
-    //    if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-    //    {
-    //        velocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
-    //    }
-    //    #endregion
+        // Get Normalized Camera Directions
+        Vector3 cameraForward = mainCamera.transform.forward;
+        Vector3 cameraRight = mainCamera.transform.right;
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+        cameraForward = cameraForward.normalized;
+        cameraRight = cameraRight.normalized;
 
-    //    #region yercekimi
-    //    isGrounded = Physics.CheckSphere(ground.position, distance, mask);
-    //    if (isGrounded && velocity.y < 0)
-    //    {
-    //        velocity.y = 0f;
-    //    }
-    //    velocity.y += Time.deltaTime * gravity;
-    //    controller.Move(velocity * Time.deltaTime);
-    //    #endregion
+        Vector3 forwardRelativeVerticalInput = playerInputs.y * cameraForward;
+        Vector3 rightRelativeHorizontalInput = playerInputs.x * cameraRight;
 
-    //    #region hizlikos
-    //    if (Input.GetKeyDown(KeyCode.LeftShift))
-    //    {
-    //        isSprinting = true;
-    //    }
-    //    if (Input.GetKeyUp(KeyCode.LeftShift))
-    //    {
-    //        isSprinting = false;
-    //    }
-    //    #endregion
+        Vector3 cameraRelativeMovement = (forwardRelativeVerticalInput + rightRelativeHorizontalInput).normalized;
 
-            #region envanter
-            if (Input.GetKeyDown(KeyCode.Tab))
+        // Run or Walk
+        if (!Input.GetKey(KeyCode.LeftShift)) { 
+            rb.MovePosition(transform.position + cameraRelativeMovement * speed * Time.deltaTime);
+        }
+        else
+        {
+            rb.MovePosition(transform.position + cameraRelativeMovement * runSpeed * Time.deltaTime);
+        }
+
+        #endregion
+
+        #region Envanter
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            Inventory.enabled = !Inventory.enabled;
+
+            if (!inventoryopen)
             {
-                Inventory.enabled = !Inventory.enabled;
-
-                if (!inventoryopen)
-                {
-                    Cursor.lockState = CursorLockMode.None;
-                    Cursor.visible = true;
-                    inventoryopen = true;
-                    mainCamera.GetComponent<Camera>().enabled = false;
-                }
-                else
-                {
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
-                    inventoryopen = false;
-                    mainCamera.GetComponent<Camera>().enabled = true;
-                }
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                inventoryopen = true;
+                mainCamera.GetComponent<Camera>().enabled = false;
             }
-            #endregion
-
-    //    #region itemE
- 
-    //    if (Input.GetKeyDown(KeyCode.E))
-    //    {
-    //        InventoryManager inventoryManager = new InventoryManager();
-    //        inventoryManager.add(GetGameObjects());
-    //    }
-
-
-    //    #endregion
-
-    }
-
-    private void FixedUpdate()
-    {
-        
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-
-        //Debug.Log(horizontal + "," + vertical);
-        Vector3 movement = new Vector3(horizontal, 0, vertical);
-        if (rb != null) Debug.Log("rb is here");
-
-        rb.MovePosition(transform.position + movement * Time.fixedDeltaTime * speed);
-        
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                inventoryopen = false;
+                mainCamera.GetComponent<Camera>().enabled = true;
+            }
+        }
+        #endregion
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        
+
         var item = other.GetComponent<Item>();
         if (item)
         {
@@ -149,6 +109,78 @@ public class PlayerController : MonoBehaviour
     {
         inventory.Container.Clear();
     }
+
+        //    #region hareket
+        //    //float horizontal = Input.GetAxis("Horizontal");
+        //    //float vertical = Input.GetAxis("Vertical");
+
+        //    //Vector3 move = transform.right * horizontal + transform.forward * vertical;
+        //    //if (isSprinting)
+        //    //{
+        //    //    controller.Move(move * runSpeed * Time.deltaTime);
+        //    //}
+        //    //else
+        //    //{
+        //    //    controller.Move(move * speed * Time.deltaTime);
+        //    //}
+
+        //    #endregion
+
+        //    #region ziplama
+        //    if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        //    {
+        //        velocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
+        //    }
+        //    #endregion
+
+        //    #region yercekimi
+        //    isGrounded = Physics.CheckSphere(ground.position, distance, mask);
+        //    if (isGrounded && velocity.y < 0)
+        //    {
+        //        velocity.y = 0f;
+        //    }
+        //    velocity.y += Time.deltaTime * gravity;
+        //    controller.Move(velocity * Time.deltaTime);
+        //    #endregion
+
+        //    #region hizlikos
+        //    if (Input.GetKeyDown(KeyCode.LeftShift))
+        //    {
+        //        isSprinting = true;
+        //    }
+        //    if (Input.GetKeyUp(KeyCode.LeftShift))
+        //    {
+        //        isSprinting = false;
+        //    }
+        //    #endregion
+
+
+    //    #region itemE
+ 
+    //    if (Input.GetKeyDown(KeyCode.E))
+    //    {
+    //        InventoryManager inventoryManager = new InventoryManager();
+    //        inventoryManager.add(GetGameObjects());
+    //    }
+
+
+    //    #endregion
+
+    //}
+
+    //private void FixedUpdate()
+    //{
+        
+    //    float horizontal = Input.GetAxisRaw("Horizontal");
+    //    float vertical = Input.GetAxisRaw("Vertical");
+
+    //    //Debug.Log(horizontal + "," + vertical);
+    //    Vector3 movement = new Vector3(horizontal, 0, vertical);
+    //    if (rb != null) Debug.Log("rb is here");
+
+    //    rb.MovePosition(transform.position + movement * Time.fixedDeltaTime * speed);
+        
+    //}
 
     //public List<GameObject> colliderList = new List<GameObject>();
     //public void OnTriggerEnter(Collider collider)
