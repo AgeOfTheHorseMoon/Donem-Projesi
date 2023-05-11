@@ -1090,27 +1090,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b62e93592504a040831e7d2d95db685, type: 3}
       propertyPath: m_LocalScale.x
-      value: 8.434949
+      value: 8.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b62e93592504a040831e7d2d95db685, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2.2454
+      value: 2.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b62e93592504a040831e7d2d95db685, type: 3}
       propertyPath: m_LocalScale.z
-      value: 11.7546015
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b62e93592504a040831e7d2d95db685, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 91.71947
+      value: 91.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b62e93592504a040831e7d2d95db685, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 276.85736
+      value: 277
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b62e93592504a040831e7d2d95db685, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 159.38312
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b62e93592504a040831e7d2d95db685, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3583,8 +3583,9 @@ MonoBehaviour:
     m_Bits: 64
   speed: 5
   runSpeed: 15
-  jumpHeight: 3
+  jumpHeight: 2
   gravity: 9.8
+  isGrounded: 0
 --- !u!143 &437543424
 CharacterController:
   m_ObjectHideFlags: 0
@@ -6310,6 +6311,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b01889b1fd2b0b3419d772b7744f866c, type: 3}
+--- !u!1 &709864384 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9b62e93592504a040831e7d2d95db685, type: 3}
+  m_PrefabInstance: {fileID: 170162420}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &709864385
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709864384}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &714368560
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     public InventoryObject inventory;
 
     public Transform ground;
-    [SerializeField] float distance = 0.5f;
+    [SerializeField] float distance = 0.3f;
     public LayerMask groundMask;
 
     [SerializeField] float speed = 5f;
@@ -20,9 +20,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float jumpHeight = 2f;
     [SerializeField] float gravity = 9.8f;
 
-
     bool inventoryopen;
-    bool isGrounded;
+    [SerializeField]bool isGrounded;
     
     Vector2 playerInputs;
     Vector3 velocity;
@@ -37,6 +36,52 @@ public class PlayerController : MonoBehaviour
     {
         // Get Inputs
         playerInputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        
+        #region Movement Calculations Relative to Camera in World Space
+        // Get Normalized Camera Directions
+        Vector3 cameraForward = mainCamera.transform.forward;
+        Vector3 cameraRight = mainCamera.transform.right;
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+        cameraForward = cameraForward.normalized;
+        cameraRight = cameraRight.normalized;
+
+        Vector3 forwardRelativeVerticalInput = playerInputs.y * cameraForward;
+        Vector3 rightRelativeHorizontalInput = playerInputs.x * cameraRight;
+
+        Vector3 cameraRelativeVelocity = (forwardRelativeVerticalInput + rightRelativeHorizontalInput).normalized;
+        #endregion
+
+        #region Walk - Run
+        // Walk - Run
+        if (!Input.GetKey(KeyCode.LeftShift))
+        {
+            controller.Move(cameraRelativeVelocity * speed * Time.deltaTime);
+        }
+        else
+        {
+            controller.Move(cameraRelativeVelocity * runSpeed * Time.deltaTime);
+        }
+        #endregion
+
+        #region Jump
+        // Jump
+        isGrounded = Physics.CheckSphere(ground.position, distance, groundMask);
+
+        if (isGrounded && velocity.y <= 0f)
+        {
+            velocity.y = -2f;
+        }
+
+        velocity.y += -gravity * Time.deltaTime;
+
+        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * -gravity);
+        }
+
+        controller.Move(velocity * Time.deltaTime);
+        #endregion
 
         #region Envanter
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -58,55 +103,6 @@ public class PlayerController : MonoBehaviour
                 mainCamera.GetComponent<Camera>().enabled = true;
             }
         }
-        #endregion
-    }
-
-    private void FixedUpdate()
-    {
-        #region Movement Calculations Relative to Camera in World Space
-        // Get Normalized Camera Directions
-        Vector3 cameraForward = mainCamera.transform.forward;
-        Vector3 cameraRight = mainCamera.transform.right;
-        cameraForward.y = 0f;
-        cameraRight.y = 0f;
-        cameraForward = cameraForward.normalized;
-        cameraRight = cameraRight.normalized;
-
-        Vector3 forwardRelativeVerticalInput = playerInputs.y * cameraForward;
-        Vector3 rightRelativeHorizontalInput = playerInputs.x * cameraRight;
-
-        Vector3 cameraRelativeMovement = (forwardRelativeVerticalInput + rightRelativeHorizontalInput).normalized;
-        #endregion
-
-        #region Walk - Run
-        // Walk - Run
-        if (!Input.GetKey(KeyCode.LeftShift))
-        {
-           controller.Move(cameraRelativeMovement * speed * Time.deltaTime);
-        }
-        else
-        {
-            controller.Move(cameraRelativeMovement * runSpeed * Time.deltaTime);
-        }
-        #endregion
-
-        #region Jump
-        // Jump
-        isGrounded = Physics.CheckSphere(ground.position, distance, groundMask);
-
-        if (isGrounded && velocity.y <= 0f)
-        {
-            velocity.y = -2f;
-        }
-
-        velocity.y += -gravity * Time.deltaTime;
-
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * -gravity);
-        }
-        
-        controller.Move(velocity * Time.deltaTime);
         #endregion
     }
 
