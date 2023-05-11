@@ -2,49 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[
-    RequireComponent(typeof(Rigidbody)),
-    RequireComponent(typeof(CapsuleCollider))
-]
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    //CharacterController controller;
-    //Vector3 velocity;
-    //bool isGrounded;
-    //private bool isSprinting = false;
+    CharacterController controller;
+
     public Camera mainCamera;
     public Canvas Inventory;
+    public InventoryObject inventory;
 
     public Transform ground;
-    public float distance = 0.3f;
+    [SerializeField] float distance = 0.5f;
+    public LayerMask groundMask;
 
-    public float speed;
-    public float runSpeed;
-    public float jumpHeight;
-    public float gravity;
-
-    public LayerMask mask;
-
-    private bool inventoryopen;
+    [SerializeField] float speed = 5f;
+    [SerializeField] float runSpeed = 15f;
+    [SerializeField] float jumpHeight = 2f;
+    [SerializeField] float gravity = 9.8f;
 
 
-    private Rigidbody rb;
-    public InventoryObject inventory;
+    bool inventoryopen;
+    bool isGrounded;
     
     Vector2 playerInputs;
+    Vector3 velocity;
 
     private void Start()
     {
-        //controller = GetComponent<CharacterController>();
+        controller = GetComponent<CharacterController>();
         Inventory.GetComponent<Canvas>().enabled = false;
-        rb = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
         // Get Inputs
         playerInputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        
+
         #region Envanter
         if (Input.GetKeyDown(KeyCode.Tab))
         {
@@ -85,16 +78,36 @@ public class PlayerController : MonoBehaviour
         Vector3 cameraRelativeMovement = (forwardRelativeVerticalInput + rightRelativeHorizontalInput).normalized;
         #endregion
 
-        // Run or Walk
+        #region Walk - Run
+        // Walk - Run
         if (!Input.GetKey(KeyCode.LeftShift))
         {
-            rb.MovePosition(transform.position + cameraRelativeMovement * speed * Time.deltaTime);
+           controller.Move(cameraRelativeMovement * speed * Time.deltaTime);
         }
         else
         {
-            rb.MovePosition(transform.position + cameraRelativeMovement * runSpeed * Time.deltaTime);
+            controller.Move(cameraRelativeMovement * runSpeed * Time.deltaTime);
+        }
+        #endregion
+
+        #region Jump
+        // Jump
+        isGrounded = Physics.CheckSphere(ground.position, distance, groundMask);
+
+        if (isGrounded && velocity.y <= 0f)
+        {
+            velocity.y = -2f;
         }
 
+        velocity.y += -gravity * Time.deltaTime;
+
+        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * -gravity);
+        }
+        
+        controller.Move(velocity * Time.deltaTime);
+        #endregion
     }
 
     public void OnTriggerEnter(Collider other)
