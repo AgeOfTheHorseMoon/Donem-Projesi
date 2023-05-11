@@ -3534,7 +3534,6 @@ GameObject:
   m_Component:
   - component: {fileID: 437543422}
   - component: {fileID: 437543423}
-  - component: {fileID: 437543424}
   - component: {fileID: 437543426}
   - component: {fileID: 437543425}
   m_Layer: 0
@@ -3587,24 +3586,6 @@ MonoBehaviour:
   Inventory: {fileID: 360404579}
   mainCamera: {fileID: 1080139826}
   inventory: {fileID: 11400000, guid: db5afe989f38b4d45adcdbaf76a7905b, type: 2}
---- !u!143 &437543424
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 437543420}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.5
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &437543425
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -10008,7 +9989,7 @@ Camera:
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
-  m_FOVAxisMode: 1
+  m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
   m_FocalLength: 50
@@ -10020,7 +10001,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.628853
+  field of view: 75
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -10045,14 +10026,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1080139823}
-  m_LocalRotation: {x: 0.03634878, y: 0.005486719, z: -0.0007718769, w: 0.99932384}
-  m_LocalPosition: {x: 0, y: 0.86, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 437543422}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 4.167, y: 0.627, z: -0.066}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1080139828
 MonoBehaviour:
   m_ObjectHideFlags: 0

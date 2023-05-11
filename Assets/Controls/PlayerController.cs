@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     //Vector3 velocity;
     //bool isGrounded;
     //private bool isSprinting = false;
+    public Camera mainCamera;
+    public Canvas Inventory;
 
     public Transform ground;
     public float distance = 0.3f;
@@ -23,15 +25,13 @@ public class PlayerController : MonoBehaviour
 
     public LayerMask mask;
 
-    public Canvas Inventory;
     private bool inventoryopen;
 
-    public Camera mainCamera;
 
     private Rigidbody rb;
-
     public InventoryObject inventory;
-
+    
+    Vector2 playerInputs;
 
     private void Start()
     {
@@ -42,35 +42,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        #region Movement Relative to Camera in World Space, Run-Walk, Jump
-
         // Get Inputs
-        Vector2 playerInputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
-        // Get Normalized Camera Directions
-        Vector3 cameraForward = mainCamera.transform.forward;
-        Vector3 cameraRight = mainCamera.transform.right;
-        cameraForward.y = 0f;
-        cameraRight.y = 0f;
-        cameraForward = cameraForward.normalized;
-        cameraRight = cameraRight.normalized;
-
-        Vector3 forwardRelativeVerticalInput = playerInputs.y * cameraForward;
-        Vector3 rightRelativeHorizontalInput = playerInputs.x * cameraRight;
-
-        Vector3 cameraRelativeMovement = (forwardRelativeVerticalInput + rightRelativeHorizontalInput).normalized;
-
-        // Run or Walk
-        if (!Input.GetKey(KeyCode.LeftShift)) { 
-            rb.MovePosition(transform.position + cameraRelativeMovement * speed * Time.deltaTime);
-        }
-        else
-        {
-            rb.MovePosition(transform.position + cameraRelativeMovement * runSpeed * Time.deltaTime);
-        }
-
-        #endregion
-
+        playerInputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        
         #region Envanter
         if (Input.GetKeyDown(KeyCode.Tab))
         {
@@ -92,6 +66,35 @@ public class PlayerController : MonoBehaviour
             }
         }
         #endregion
+    }
+
+    private void FixedUpdate()
+    {
+        #region Movement Calculations Relative to Camera in World Space
+        // Get Normalized Camera Directions
+        Vector3 cameraForward = mainCamera.transform.forward;
+        Vector3 cameraRight = mainCamera.transform.right;
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+        cameraForward = cameraForward.normalized;
+        cameraRight = cameraRight.normalized;
+
+        Vector3 forwardRelativeVerticalInput = playerInputs.y * cameraForward;
+        Vector3 rightRelativeHorizontalInput = playerInputs.x * cameraRight;
+
+        Vector3 cameraRelativeMovement = (forwardRelativeVerticalInput + rightRelativeHorizontalInput).normalized;
+        #endregion
+
+        // Run or Walk
+        if (!Input.GetKey(KeyCode.LeftShift))
+        {
+            rb.MovePosition(transform.position + cameraRelativeMovement * speed * Time.deltaTime);
+        }
+        else
+        {
+            rb.MovePosition(transform.position + cameraRelativeMovement * runSpeed * Time.deltaTime);
+        }
+
     }
 
     public void OnTriggerEnter(Collider other)
