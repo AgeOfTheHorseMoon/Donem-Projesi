@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : LivingEntity
 {
     CharacterController controller;
 
@@ -25,63 +25,33 @@ public class PlayerController : MonoBehaviour
     
     Vector2 playerInputs;
     Vector3 velocity;
+    
+    [SerializeField] Transform attackPoint;
+    [SerializeField] float attackRadius = 2f;
+    [SerializeField] float attackRate = 2f;
+    float nextAttackTime;
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         controller = GetComponent<CharacterController>();
         Inventory.GetComponent<Canvas>().enabled = false;
     }
 
     private void Update()
     {
-        // Get Inputs
-        playerInputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        
-        #region Movement Calculations Relative to Camera in World Space
-        // Get Normalized Camera Directions
-        Vector3 cameraForward = mainCamera.transform.forward;
-        Vector3 cameraRight = mainCamera.transform.right;
-        cameraForward.y = 0f;
-        cameraRight.y = 0f;
-        cameraForward = cameraForward.normalized;
-        cameraRight = cameraRight.normalized;
+        Movement();
+        Jump();
 
-        Vector3 forwardRelativeVerticalInput = playerInputs.y * cameraForward;
-        Vector3 rightRelativeHorizontalInput = playerInputs.x * cameraRight;
-
-        Vector3 cameraRelativeVelocity = (forwardRelativeVerticalInput + rightRelativeHorizontalInput).normalized;
-        #endregion
-
-        #region Walk - Run
-        // Walk - Run
-        if (!Input.GetKey(KeyCode.LeftShift))
+        // Attacking
+        if (Time.time >= nextAttackTime)
         {
-            controller.Move(cameraRelativeVelocity * speed * Time.deltaTime);
+            if (Input.GetMouseButtonDown(0))
+            {
+                Attack();
+                nextAttackTime = Time.time + 1 / attackRate; // 2 times in 1 sec if rate is 2
+            }
         }
-        else
-        {
-            controller.Move(cameraRelativeVelocity * runSpeed * Time.deltaTime);
-        }
-        #endregion
-
-        #region Jump
-        // Jump
-        isGrounded = Physics.CheckSphere(ground.position, distance, groundMask);
-
-        if (isGrounded && velocity.y <= 0f)
-        {
-            velocity.y = -2f;
-        }
-
-        velocity.y += -gravity * Time.deltaTime;
-
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * -gravity);
-        }
-
-        controller.Move(velocity * Time.deltaTime);
-        #endregion
 
         #region Envanter
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -104,6 +74,79 @@ public class PlayerController : MonoBehaviour
             }
         }
         #endregion
+    }
+
+
+    void Movement()
+    {
+        // Get Inputs
+        playerInputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
+        // Get Normalized Camera Directions in World Space
+        Vector3 cameraForward = mainCamera.transform.forward;
+        Vector3 cameraRight = mainCamera.transform.right;
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+        cameraForward = cameraForward.normalized;
+        cameraRight = cameraRight.normalized;
+
+        Vector3 forwardRelativeVerticalInput = playerInputs.y * cameraForward;
+        Vector3 rightRelativeHorizontalInput = playerInputs.x * cameraRight;
+
+        Vector3 cameraRelativeVelocity = (forwardRelativeVerticalInput + rightRelativeHorizontalInput).normalized;
+
+        // Walk - Run
+        if (!Input.GetKey(KeyCode.LeftShift))
+        {
+            controller.Move(cameraRelativeVelocity * speed * Time.deltaTime);
+        }
+        else
+        {
+            controller.Move(cameraRelativeVelocity * runSpeed * Time.deltaTime);
+        }
+    }
+
+    void Jump()
+    {
+        // Jump
+        isGrounded = Physics.CheckSphere(ground.position, distance, groundMask);
+
+        if (isGrounded && velocity.y <= 0f)
+        {
+            velocity.y = -2f;
+        }
+
+        velocity.y += -gravity * Time.deltaTime;
+
+        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * -gravity);
+        }
+
+        controller.Move(velocity * Time.deltaTime);
+    }
+
+    void Attack()
+    {
+        Collider[] targets = Physics.OverlapSphere(attackPoint.position, attackRadius);
+
+        foreach (Collider target in targets)
+        {
+            if (target.GetComponent<LivingEntity>() != null)
+            {
+                target.GetComponent<LivingEntity>().TakeHit(Random.Range(5f,10f));
+            }
+        }
+
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if(attackPoint != null)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
+        }  
     }
 
     public void OnTriggerEnter(Collider other)
