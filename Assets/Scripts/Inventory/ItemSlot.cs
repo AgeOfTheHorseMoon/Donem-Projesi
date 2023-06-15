@@ -12,8 +12,8 @@ public class ItemSlot : MonoBehaviour
     public bool isFull;
 
 
-    //[SerializeField]
-    // private TextMeshPro_UGUI quantitiyText;
+    [SerializeField]
+    private TextMeshProUGUI quantitiyText;
 
     [SerializeField]
     private Image itemImage;
@@ -27,6 +27,5 @@ public class ItemSlot : MonoBehaviour
         //quantitiyText.text = quantity.ToString();
         //quantitiyText.enabled = true;
         itemImage.sprite = item.itemSprite;
-
     }
 }
