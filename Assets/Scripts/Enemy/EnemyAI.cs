@@ -9,7 +9,7 @@ public class EnemyAI : MonoBehaviour
 {
     public NavMeshAgent agent;
 
-    public Transform player;
+    Transform player;
 
     public LayerMask whatIsGround, whatIsPlayer;
 
@@ -26,7 +26,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Awake()
     {
-        player = GameObject.Find("PlayerObj").transform;
+        player = GameObject.Find("Player").transform;
         agent = GetComponent<NavMeshAgent>();
     }
     private void Update()
@@ -55,7 +55,7 @@ public class EnemyAI : MonoBehaviour
 
         walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
 
-        if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround));
+        if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
         walkPointSet = true;
     }
 

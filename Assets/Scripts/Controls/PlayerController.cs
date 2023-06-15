@@ -36,6 +36,7 @@ public class PlayerController : LivingEntity
     {
         base.Start();
         controller = GetComponent<CharacterController>();
+        inventoryManager = GameObject.Find("InventoryCanvas").GetComponent<InventoryManager>();
     }
 
     private void Update()
@@ -52,9 +53,6 @@ public class PlayerController : LivingEntity
                 nextAttackTime = Time.time + 1 / attackRate; // 2 times in 1 sec if rate is 2
             }
         }
-
-       
-
     }
 
 
@@ -132,10 +130,11 @@ public class PlayerController : LivingEntity
 
     public void OnTriggerEnter(Collider other)
     {
-        var item = other.GetComponent<ItemObject>();
-        if (other.gameObject.tag == "Item")
+        if (other.GetComponent<Item>() != null)
         {
-            inventoryManager.AddItem(item.itemName,1, item.itemSprite);
+            var item = other.GetComponent<Item>();
+
+            inventoryManager.AddItem(item.itemName, 1, item.itemSprite);
             Destroy(other.gameObject);
 
         }

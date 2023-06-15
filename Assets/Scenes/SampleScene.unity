@@ -5003,6 +5003,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: ff384d88ac1f48945bf5810d82936cb1, type: 2}
+  type: 0
+  itemDamage: 0
+  itemDurability: 0
+  itemRange: 0
+  itemSprite: {fileID: 0}
+  itemName: 
+  itemDescription: 
 --- !u!4 &856908862 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4403516358094458, guid: 6f30e37393d03be4aa5db83187965fe5, type: 3}
@@ -6061,6 +6068,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 47c073edba665974db4610088e45d60e, type: 2}
+  type: 0
+  itemDamage: 0
+  itemDurability: 0
+  itemRange: 0
+  itemSprite: {fileID: 0}
+  itemName: 
+  itemDescription: 
 --- !u!64 &1025941502
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -6562,7 +6576,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 1066783063}
-  player: {fileID: 437543422}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -6620,15 +6633,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d772a85edd8bc1d4fb6a11a24f505b7c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.661048
+      value: 9.705
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d772a85edd8bc1d4fb6a11a24f505b7c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.3452964
+      value: 3.374
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d772a85edd8bc1d4fb6a11a24f505b7c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.2044182
+      value: -6.748
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d772a85edd8bc1d4fb6a11a24f505b7c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6686,6 +6699,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: db965fda761b4294c80421b9607828f1, type: 2}
+  type: 0
+  itemDamage: 20
+  itemDurability: 100
+  itemRange: 5
+  itemSprite: {fileID: 0}
+  itemName: Club
+  itemDescription: A highly versatile weapon.
 --- !u!64 &1079945341
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -8500,6 +8520,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 7c43c17810b68a14e85e468e9236ef53, type: 2}
+  type: 0
+  itemDamage: 0
+  itemDurability: 0
+  itemRange: 0
+  itemSprite: {fileID: 0}
+  itemName: 
+  itemDescription: 
 --- !u!64 &1322066981
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -9619,7 +9646,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 1516204904}
-  player: {fileID: 437543422}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64

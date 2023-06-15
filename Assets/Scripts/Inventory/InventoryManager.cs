@@ -9,10 +9,6 @@ public class InventoryManager : MonoBehaviour
     public ItemSlot[] itemSlot;
     public Camera mainCamera;
 
-    void Start()
-    {
-        
-    }
 
     void Update()
     {
