@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52a92614fa0ed564aa74c9b8980525bd, type: 3}
-  m_Name: HealPot
+  m_Script: {fileID: 11500000, guid: 755828d25438dc244ac5dccf168dcd01, type: 3}
+  m_Name: Sword
   m_EditorClassIdentifier: 
-  prefab: {fileID: 1795102964167686, guid: 6f30e37393d03be4aa5db83187965fe5, type: 3}
-  type: 1
+  prefab: {fileID: 919132149155446097, guid: 616d9893fa9f8254b8e1bb225df76633, type: 3}
+  type: 0
+  itemSprite: {fileID: 21300000, guid: 3a128be8a15e33749a1f37a7aa1034aa, type: 3}
   description: 
-  restoreHealthValue: 20
+  attackBonus: 16

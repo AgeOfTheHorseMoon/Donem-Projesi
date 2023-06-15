@@ -8,8 +8,9 @@ public class PlayerController : LivingEntity
     CharacterController controller;
 
     public Camera mainCamera;
-    public Canvas Inventory;
-    public InventoryObject inventory;
+    public GameObject Inventory;
+
+    private InventoryManager inventoryManager;
 
     public Transform ground;
     [SerializeField] float distance = 0.3f;
@@ -35,7 +36,6 @@ public class PlayerController : LivingEntity
     {
         base.Start();
         controller = GetComponent<CharacterController>();
-        Inventory.GetComponent<Canvas>().enabled = false;
     }
 
     private void Update()
@@ -53,27 +53,8 @@ public class PlayerController : LivingEntity
             }
         }
 
-        #region Envanter
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            Inventory.enabled = !Inventory.enabled;
+       
 
-            if (!inventoryopen)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                inventoryopen = true;
-                mainCamera.GetComponent<Camera>().enabled = false;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                inventoryopen = false;
-                mainCamera.GetComponent<Camera>().enabled = true;
-            }
-        }
-        #endregion
     }
 
 
@@ -151,67 +132,86 @@ public class PlayerController : LivingEntity
 
     public void OnTriggerEnter(Collider other)
     {
-
-        var item = other.GetComponent<Item>();
-        if (item)
+        var item = other.GetComponent<ItemObject>();
+        if (other.gameObject.tag == "Item")
         {
-            inventory.AddItem(item.item, 1);
+            inventoryManager.AddItem(item.itemName,1, item.itemSprite);
             Destroy(other.gameObject);
+
         }
+                
     }
 
-    private void OnApplicationQuit()
-    {
-        inventory.Container.Clear();
-    }
+    //public void OnTriggerEnter(Collider other)
+    //{
 
-        //    #region hareket
-        //    //float horizontal = Input.GetAxis("Horizontal");
-        //    //float vertical = Input.GetAxis("Vertical");
+    //    var item = other.GetComponent<Item>();
+    //    if (item)
+    //    {
+    //        for (int i = 0;i< itemSlot.Length;i++)
+    //        {
+    //            if (!itemSlot[i].isFull == false)
+    //            {
+    //                itemSlot[i].AddItem(item.item, 1);
+    //            }
+    //        }
+    //        Destroy(other.gameObject);
+    //    }
+    //}
 
-        //    //Vector3 move = transform.right * horizontal + transform.forward * vertical;
-        //    //if (isSprinting)
-        //    //{
-        //    //    controller.Move(move * runSpeed * Time.deltaTime);
-        //    //}
-        //    //else
-        //    //{
-        //    //    controller.Move(move * speed * Time.deltaTime);
-        //    //}
 
-        //    #endregion
+    //private void OnApplicationQuit()
+    //{
+    //    inventory.Container.Clear();
+    //}
 
-        //    #region ziplama
-        //    if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        //    {
-        //        velocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
-        //    }
-        //    #endregion
+    //    #region hareket
+    //    //float horizontal = Input.GetAxis("Horizontal");
+    //    //float vertical = Input.GetAxis("Vertical");
 
-        //    #region yercekimi
-        //    isGrounded = Physics.CheckSphere(ground.position, distance, mask);
-        //    if (isGrounded && velocity.y < 0)
-        //    {
-        //        velocity.y = 0f;
-        //    }
-        //    velocity.y += Time.deltaTime * gravity;
-        //    controller.Move(velocity * Time.deltaTime);
-        //    #endregion
+    //    //Vector3 move = transform.right * horizontal + transform.forward * vertical;
+    //    //if (isSprinting)
+    //    //{
+    //    //    controller.Move(move * runSpeed * Time.deltaTime);
+    //    //}
+    //    //else
+    //    //{
+    //    //    controller.Move(move * speed * Time.deltaTime);
+    //    //}
 
-        //    #region hizlikos
-        //    if (Input.GetKeyDown(KeyCode.LeftShift))
-        //    {
-        //        isSprinting = true;
-        //    }
-        //    if (Input.GetKeyUp(KeyCode.LeftShift))
-        //    {
-        //        isSprinting = false;
-        //    }
-        //    #endregion
+    //    #endregion
+
+    //    #region ziplama
+    //    if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+    //    {
+    //        velocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
+    //    }
+    //    #endregion
+
+    //    #region yercekimi
+    //    isGrounded = Physics.CheckSphere(ground.position, distance, mask);
+    //    if (isGrounded && velocity.y < 0)
+    //    {
+    //        velocity.y = 0f;
+    //    }
+    //    velocity.y += Time.deltaTime * gravity;
+    //    controller.Move(velocity * Time.deltaTime);
+    //    #endregion
+
+    //    #region hizlikos
+    //    if (Input.GetKeyDown(KeyCode.LeftShift))
+    //    {
+    //        isSprinting = true;
+    //    }
+    //    if (Input.GetKeyUp(KeyCode.LeftShift))
+    //    {
+    //        isSprinting = false;
+    //    }
+    //    #endregion
 
 
     //    #region itemE
- 
+
     //    if (Input.GetKeyDown(KeyCode.E))
     //    {
     //        InventoryManager inventoryManager = new InventoryManager();
@@ -225,7 +225,7 @@ public class PlayerController : LivingEntity
 
     //private void FixedUpdate()
     //{
-        
+
     //    float horizontal = Input.GetAxisRaw("Horizontal");
     //    float vertical = Input.GetAxisRaw("Vertical");
 
@@ -234,7 +234,7 @@ public class PlayerController : LivingEntity
     //    if (rb != null) Debug.Log("rb is here");
 
     //    rb.MovePosition(transform.position + movement * Time.fixedDeltaTime * speed);
-        
+
     //}
 
     //public List<GameObject> colliderList = new List<GameObject>();
@@ -266,6 +266,47 @@ public class PlayerController : LivingEntity
     //        items[i]= colliderList[i].GetComponent<item>();
     //    }
     //    return items;
+    //}
+
+    //#region Envanter
+    //if (Input.GetKeyDown(KeyCode.Tab))
+    //{
+    //    Inventory.SetActive(true);
+
+    //    if (!inventoryopen)
+    //    {
+    //        Cursor.lockState = CursorLockMode.None;
+    //        Cursor.visible = true;
+    //        inventoryopen = true;
+    //        mainCamera.GetComponent<Camera>().enabled = false;
+    //    }
+    //    else if (inventoryopen)
+    //    {
+    //        Cursor.lockState = CursorLockMode.Locked;
+    //        Cursor.visible = false;
+    //        inventoryopen = false;
+    //        mainCamera.GetComponent<Camera>().enabled = true;
+    //    }
+    //}
+    //#endregion
+
+    //if (Input.GetKeyUp(KeyCode.Tab) && inventoryopen)
+    //{
+    //    Cursor.lockState = CursorLockMode.Locked;
+    //    Cursor.visible = false;
+    //    mainCamera.GetComponent<Camera>().enabled = true;
+    //    Time.timeScale = 1;
+    //    Inventory.SetActive(false);
+    //    inventoryopen = false;
+    //}
+    //else if (Input.GetKeyUp(KeyCode.Tab) && !inventoryopen)
+    //{
+    //    Cursor.lockState = CursorLockMode.None;
+    //    Cursor.visible = true;
+    //    mainCamera.GetComponent<Camera>().enabled = false;
+    //    Time.timeScale = 0;
+    //    Inventory.SetActive(true);
+    //    inventoryopen = true;
     //}
 
 }
