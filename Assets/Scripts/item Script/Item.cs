@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public ItemObject item;
-
     public enum ItemType
     {
         Sword, Bow, Hammer, Potion, Book

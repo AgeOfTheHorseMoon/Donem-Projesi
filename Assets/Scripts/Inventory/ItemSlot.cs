@@ -1,31 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
+
 using TMPro;
+
 
 public class ItemSlot : MonoBehaviour
 {
-    public ItemObject item;
+    public string itemName;
     public int quantitiy;
     public Sprite itemSprite;
     public bool isFull;
 
 
     [SerializeField]
-    private TextMeshProUGUI quantitiyText;
+    private TMP_Text quantitiyText;
 
     [SerializeField]
     private Image itemImage;
     
-    public void AddItem(ItemObject item, int quantity)
+    public void AddItem(string itemName, int quantity, Sprite itemSprite)
     {
-        this.item = item;
+        this.itemName = itemName;
         this.quantitiy = quantity;
+        this.itemSprite = itemSprite;
         isFull = true;
 
-        //quantitiyText.text = quantity.ToString();
-        //quantitiyText.enabled = true;
-        itemImage.sprite = item.itemSprite;
+        quantitiyText.text = quantity.ToString();
+        quantitiyText.enabled = true;
+        itemImage.sprite = itemSprite;
     }
 }

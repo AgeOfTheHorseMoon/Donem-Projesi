@@ -16,7 +16,7 @@ public class InventoryManager : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            mainCamera.GetComponent<Camera>().enabled = true;
+            //mainCamera.GetComponent<Camera>().enabled = true;
             Time.timeScale = 1;
             inventoryMenu.SetActive(false);
             inventoryopen = false;
@@ -25,7 +25,7 @@ public class InventoryManager : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            mainCamera.GetComponent<Camera>().enabled = false;
+            // mainCamera.GetComponent<Camera>().enabled = false;
             Time.timeScale = 0;
             inventoryMenu.SetActive(true);
             inventoryopen = true;
@@ -34,6 +34,13 @@ public class InventoryManager : MonoBehaviour
 
     public void AddItem(string itemName, int quantity , Sprite itemSprite)
     {
-        Debug.Log("itemName=" +itemName);
+        for (int i = 0; i < itemSlot.Length; i++)
+        {
+            if (itemSlot[i].isFull == false)
+            {
+                itemSlot[i].AddItem(itemName, quantity, itemSprite);
+                return;
+            }
+        }
     }
 }
