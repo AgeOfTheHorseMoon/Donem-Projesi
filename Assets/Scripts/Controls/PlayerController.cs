@@ -134,8 +134,13 @@ public class PlayerController : LivingEntity
         {
             var item = other.GetComponent<Item>();
 
-            inventoryManager.AddItem(item.itemName, 1, item.itemSprite);
-            Destroy(other.gameObject);
+            int lefOverItems = inventoryManager.AddItem(item.itemName, item.quantity, item.itemSprite, item.itemDescription);
+            if (lefOverItems <= 0)
+            {
+                Destroy(other.gameObject);
+            }
+            else
+                item.quantity = lefOverItems;
 
         }
                 
