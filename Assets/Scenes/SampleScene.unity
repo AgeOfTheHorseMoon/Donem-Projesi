@@ -7623,6 +7623,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 10
+  type: 0
+  searchRange_f: 20.5
+  fireRate: 2
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  projectilePrefab: {fileID: 0}
 --- !u!114 &1066783062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11154,6 +11161,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 15
+  type: 1
+  searchRange_f: 4
+  fireRate: 2
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  projectilePrefab: {fileID: 0}
 --- !u!114 &1516204906
 MonoBehaviour:
   m_ObjectHideFlags: 0
