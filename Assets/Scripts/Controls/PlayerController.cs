@@ -136,9 +136,7 @@ public class PlayerController : LivingEntity
 
             inventoryManager.AddItem(item.itemName, 1, item.itemSprite);
             Destroy(other.gameObject);
-
         }
-                
     }
 
     //public void OnTriggerEnter(Collider other)

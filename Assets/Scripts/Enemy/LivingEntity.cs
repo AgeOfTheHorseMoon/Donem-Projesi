@@ -34,4 +34,9 @@ public class LivingEntity : MonoBehaviour, IDamageable
         // Change this if you want to do something else like changing visuals etc.
         Destroy(this.gameObject);
     }
+
+    internal void TakeHit(object damage)
+    {
+        throw new NotImplementedException();
+    }
 }

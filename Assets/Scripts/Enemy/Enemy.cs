@@ -12,14 +12,13 @@ public class Enemy : LivingEntity
     
     [SerializeField] EnemyType type;
 
-    [SerializeField] float searchRange;
-
     [SerializeField] LayerMask playerMask;
 
     [SerializeField] GameObject projectilePrefab;
     [SerializeField]Transform attackPoint;
 
-    [SerializeField] float fireRate = 2f, attackRadius, damage = 10f;
+    [SerializeField] float 
+        fireRate = 2f, attackRadius, damage = 10f, projectileLifeTime = 8f;
 
     float timer;
 
@@ -33,7 +32,7 @@ public class Enemy : LivingEntity
     void Update()
     {
         // Target in range
-        if(Physics.CheckSphere(transform.position, searchRange, playerMask))
+        if(Physics.CheckSphere(transform.position, attackRadius, playerMask))
         {
             if(type == EnemyType.Melee)
             {
@@ -56,7 +55,10 @@ public class Enemy : LivingEntity
         if(timer > fireRate)
         {
             timer = 0f;
-            Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+            GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+            projectile.GetComponent<Projectile>().Damage = this.damage;
+            projectile.GetComponent<Projectile>().LifeTime = this.projectileLifeTime;
+
         }
     }
 
@@ -71,7 +73,16 @@ public class Enemy : LivingEntity
             // Player in range
             if(Physics.CheckSphere(attackPoint.position, attackRadius, playerMask))
             {
-                GameObject.FindGameObjectWithTag("Player").GetComponent<LivingEntity>().TakeHit(damage);
+                Collider[] targets = Physics.OverlapSphere(attackPoint.position, attackRadius, playerMask);
+
+                foreach (var target in targets)
+                {
+                    if (target.CompareTag("Player"))
+                    {
+                        target.GetComponent<LivingEntity>().TakeHit(damage);
+                        Debug.Log(target.name + " hit for: " + damage);
+                    }
+                }
             }
         }
     }
