@@ -16,6 +16,14 @@ public class LivingEntity : MonoBehaviour, IDamageable
         Health = startingHealth;
     }
 
+    public float GetHealth()
+    {
+        return Health;
+    }
+    public void SetHealth(float amount)
+    {
+        Health += amount;   
+    }
     public void TakeHit(float damage)
     {
         Health -= damage;
@@ -35,8 +43,4 @@ public class LivingEntity : MonoBehaviour, IDamageable
         Destroy(this.gameObject);
     }
 
-    internal void TakeHit(object damage)
-    {
-        throw new NotImplementedException();
-    }
-}
+ }
