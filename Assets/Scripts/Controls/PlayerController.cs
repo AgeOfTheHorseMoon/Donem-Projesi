@@ -32,11 +32,8 @@ public class PlayerController : LivingEntity
     [SerializeField] float attackRate = 2f;
     float nextAttackTime;
 
-    public Collider colliderPickUp;
-
     public override void Start()
     {
-        colliderPickUp.enabled = false;
         base.Start();
         controller = GetComponent<CharacterController>();
         inventoryManager = GameObject.Find("InventoryCanvas").GetComponent<InventoryManager>();
@@ -44,14 +41,6 @@ public class PlayerController : LivingEntity
 
     private void Update()
     {
-        
-
-        if (Input.GetKey(KeyCode.E))
-        {
-            colliderPickUp.enabled = true;
-
-        }
-
         Movement();
         Jump();
 
@@ -145,16 +134,9 @@ public class PlayerController : LivingEntity
         {
             var item = other.GetComponent<Item>();
 
-            int lefOverItems = inventoryManager.AddItem(item.itemName, item.quantity, item.itemSprite, item.itemDescription);
-            if (lefOverItems <= 0)
-            {
-                Destroy(other.gameObject);
-            }
-            else
-                item.quantity = lefOverItems;
-
+            inventoryManager.AddItem(item.itemName, 1, item.itemSprite);
+            Destroy(other.gameObject);
         }
-        colliderPickUp.enabled = false;
     }
 
     //public void OnTriggerEnter(Collider other)
