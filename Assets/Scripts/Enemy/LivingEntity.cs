@@ -8,7 +8,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
     public float startingHealth;
 
     // protected will give you the ability to use it on a derived class
-    public float Health { get; protected set; }
+    protected float Health { get; set; }
     protected bool dead;
 
     public virtual void Start()

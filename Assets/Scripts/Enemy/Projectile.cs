@@ -5,40 +5,32 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class Projectile : MonoBehaviour
 {
-    Transform playerTransform;
+    [SerializeField]
+    LayerMask collisionMask;
 
-    public float Damage { get; set; }
-    public float LifeTime { get; set; }
+    [SerializeField]
+    float speed = 20f, damage = 5f, lifeTime = 6f;
 
-    void Start()
+    Vector3 shootDirection;
+
+    public void Setup(Vector3 shootDirection)
     {
-        playerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-
-        Vector3 direction = transform.position - playerTransform.position;
-        transform.localRotation = Quaternion.Euler(direction);
-
+        this.shootDirection = shootDirection;
+        transform.LookAt(shootDirection);
+        Destroy(this.gameObject, lifeTime);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.forward);
-
-        // if not hit anything
-        Destroy(this.gameObject, LifeTime);
+        transform.position += shootDirection * speed * Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<LivingEntity>() != null)
+        if(other.GetComponent<LivingEntity>() != null)
         {
-            other.GetComponent<LivingEntity>().TakeHit(Damage);
-            Destroy(this.gameObject);
-        }
-        else
-        {
+            other.GetComponent<LivingEntity>().TakeHit(damage);
             Destroy(this.gameObject);
         }
     }
-
 }

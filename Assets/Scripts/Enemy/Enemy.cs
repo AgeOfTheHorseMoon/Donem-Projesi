@@ -15,10 +15,11 @@ public class Enemy : LivingEntity
     [SerializeField] LayerMask playerMask;
 
     [SerializeField] GameObject projectilePrefab;
-    [SerializeField]Transform attackPoint;
+    [SerializeField] Transform attackPoint;
 
-    [SerializeField] float 
-        fireRate = 2f, attackRadius, damage = 10f, projectileLifeTime = 8f;
+    [SerializeField]
+    float
+        attackRate = 2f, attackRadius, meleeDamage;
 
     float timer;
 
@@ -52,13 +53,12 @@ public class Enemy : LivingEntity
         timer += Time.deltaTime;
 
         // Shoot when fireRate matched
-        if(timer > fireRate)
+        if(timer > attackRate)
         {
             timer = 0f;
-            GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            projectile.GetComponent<Projectile>().Damage = this.damage;
-            projectile.GetComponent<Projectile>().LifeTime = this.projectileLifeTime;
-
+            GameObject projectile = Instantiate(projectilePrefab, attackPoint.position, Quaternion.identity);
+            Vector3 direction = (GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>().position - attackPoint.position).normalized;
+            projectile.GetComponent<Projectile>().Setup(direction);
         }
     }
 
@@ -66,7 +66,7 @@ public class Enemy : LivingEntity
     {
         timer += Time.deltaTime;
 
-        if(timer > fireRate)
+        if(timer > attackRate)
         {
             timer = 0f;
             
@@ -79,8 +79,8 @@ public class Enemy : LivingEntity
                 {
                     if (target.CompareTag("Player"))
                     {
-                        target.GetComponent<LivingEntity>().TakeHit(damage);
-                        Debug.Log(target.name + " hit for: " + damage);
+                        target.GetComponent<LivingEntity>().TakeHit(meleeDamage);
+                        Debug.Log(target.name + " hit for: " + meleeDamage);
                     }
                 }
             }

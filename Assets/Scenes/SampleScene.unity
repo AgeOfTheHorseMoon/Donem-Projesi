@@ -3117,7 +3117,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!4 &437543422
 Transform:
   m_ObjectHideFlags: 0
@@ -7661,10 +7661,9 @@ MonoBehaviour:
     m_Bits: 128
   projectilePrefab: {fileID: 0}
   attackPoint: {fileID: 977058685}
-  fireRate: 1
+  attackRate: 2
   attackRadius: 2
-  damage: 10
-  projectileLifeTime: 8
+  meleeDamage: 0
 --- !u!114 &1066783062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11202,10 +11201,9 @@ MonoBehaviour:
     m_Bits: 128
   projectilePrefab: {fileID: 5809633422018981776, guid: 247a03818355ecd4ba3de72310c1f9ba, type: 3}
   attackPoint: {fileID: 2027525025}
-  fireRate: 2
+  attackRate: 2
   attackRadius: 10
-  damage: 15
-  projectileLifeTime: 8
+  meleeDamage: 0
 --- !u!114 &1516204906
 MonoBehaviour:
   m_ObjectHideFlags: 0
