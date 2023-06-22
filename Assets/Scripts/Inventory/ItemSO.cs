@@ -21,14 +21,27 @@ public class ItemSO : ScriptableObject
 
     //===================//
 
-    public void UseConsumable(string itemName)
+    public bool UseConsumable(string itemName)
     {
         if (this.itemName == itemName)
         {
             if (statToChange == ConsumableStat.Health)
             {
-                GameObject.Find("HealthCanvas").GetComponent<PlayerHealth>().ChangeHealth(amountToChangeStat);
+                Debug.Log("How many times come here");
+
+                PlayerHealth playerHealth = GameObject.Find("HealthCanvas").GetComponent<PlayerHealth>();
+                if (playerHealth.health >= playerHealth.maxHealth)
+                {
+                    return false;
+                }
+                else
+                {
+                    playerHealth.ChangeHealth(amountToChangeStat);
+                    return true;
+                }
             }
         }
+        return false;
     }
+    
 }

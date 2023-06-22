@@ -33,15 +33,17 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void UseConsumable(string itemName)
+    public bool UseConsumable(string itemName)
     {
         for(int i = 0; i < items.Length; i++)
         {
             if (items[i].itemName == itemName)
             {
-                items[i].UseConsumable(itemName);
+                bool usable = items[i].UseConsumable(itemName);
+                return usable;
             }
         }
+        return false;
     }
 
     public int AddItem(string itemName, int quantity , Sprite itemSprite , string itemDescription)
