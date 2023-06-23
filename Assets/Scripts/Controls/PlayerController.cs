@@ -33,11 +33,17 @@ public class PlayerController : LivingEntity
     float nextAttackTime;
 
     public Collider colliderPickUp;
+
+    public Animator anim;
+
+
+
     public override void Start()
     {
+        anim = GetComponent<Animator>();
         colliderPickUp.enabled = false;
         base.Start();
-        controller = GetComponent<CharacterController>();
+        controller = GetComponentInChildren<CharacterController>();
         inventoryManager = GameObject.Find("InventoryCanvas").GetComponent<InventoryManager>();
     }
 
@@ -48,23 +54,26 @@ public class PlayerController : LivingEntity
             colliderPickUp.enabled = true;
 
         }
-        
 
+        anim.SetFloat("speed", 0);
         Movement();
         Jump();
 
         // Attacking
         if (Time.time >= nextAttackTime)
         {
+            anim.SetBool("attack", false);
+
             if (Input.GetMouseButtonDown(0))
             {
+                anim.SetBool("attack", true);
                 Attack();
                 nextAttackTime = Time.time + 1 / attackRate; // 2 times in 1 sec if rate is 2
             }
         }
     }
 
-
+        
     void Movement()
     {
         // Get Inputs
@@ -83,14 +92,20 @@ public class PlayerController : LivingEntity
 
         Vector3 cameraRelativeVelocity = (forwardRelativeVerticalInput + rightRelativeHorizontalInput).normalized;
 
+        
         // Walk - Run
         if (!Input.GetKey(KeyCode.LeftShift))
         {
             controller.Move(cameraRelativeVelocity * speed * Time.deltaTime);
+            if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A)|| Input.GetKey(KeyCode.S)|| Input.GetKey(KeyCode.D))
+            {
+                anim.SetFloat("speed", speed);
+            }
         }
         else
         {
             controller.Move(cameraRelativeVelocity * runSpeed * Time.deltaTime);
+            anim.SetFloat("speed", runSpeed);
         }
     }
 
@@ -102,6 +117,7 @@ public class PlayerController : LivingEntity
         if (isGrounded && velocity.y <= 0f)
         {
             velocity.y = -2f;
+            anim.SetBool("jump", false);
         }
 
         velocity.y += -gravity * Time.deltaTime;
@@ -109,9 +125,11 @@ public class PlayerController : LivingEntity
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * -gravity);
+            anim.SetBool("jump", true);
         }
 
         controller.Move(velocity * Time.deltaTime);
+        
     }
 
     void Attack()
