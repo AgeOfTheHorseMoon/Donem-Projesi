@@ -26,11 +26,14 @@ public class PlayerHealth : MonoBehaviour
         mana_Text.text  = mana.ToString();
         stamina_Text.text  = stamina.ToString();
     }
+    void Update()
+    {
+        health = GameObject.FindGameObjectWithTag("Player").GetComponent<LivingEntity>().GetHealth();
+        health_Text.text = health.ToString();
+    }
 
     public void ChangeHealth(float amount)
     {
-        health = GameObject.FindGameObjectWithTag("Player").GetComponent<LivingEntity>().GetHealth();
-        Debug.Log("healt points" + amount);
         health_Text.text = (health + amount).ToString();
         GameObject.FindGameObjectWithTag("Player").GetComponent<LivingEntity>().SetHealth(amount);
     }
